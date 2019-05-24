@@ -1,9 +1,11 @@
 const puppeteer = require('puppeteer-core');
 const utils = require('./utils');
+const settings = require('./settings');
 const cmd = require('./cmd');
+const URL = require('url');
 
+var browser_option = {};
 var browser_args = [], cookies_ = [];
-var browser_option = {}, results = {};
 var argument = cmd(process.argv.slice(2));
 var cookies = typeof(argument.cookies)=='string'?JSON.parse(argument.cookies):{};
 var timeout = typeof(argument.timeout)=='string'?parseInt(argument.timeout):20;
@@ -33,6 +35,9 @@ for(let key in cookies){
     cookies_.push({"name": key, "value": cookies[key], "url": url});
 }
 
+var url_param = URL.parse(url);
+console.log(url_param);
+settings.hostname = url_param.hostname;
 
 browser_option['args'] = browser_args;
 (async() => {
@@ -46,13 +51,16 @@ browser_option['args'] = browser_args;
         if(await utils.test_proxy(browser)){} else{return}
     }
     try{
-        await page.goto(url);
+        for (let i=0;i<deeps;i++){
+            await page.goto(url);
+            await utils.get_a_link(page);
+        }
     }
     catch (UnhandledPromiseRejectionWarning){
     }
-    var a = await page.content();
-    //console.log(a);
-    await page.waitFor(2000);
+    //console.log(a[1]);
 
+    console.log(settings.results);
+    await page.waitFor(2000);
     await browser.close();
 })();
