@@ -39,28 +39,51 @@ var url_param = URL.parse(url);
 console.log(url_param);
 settings.hostname = url_param.hostname;
 
-browser_option['args'] = browser_args;
-(async() => {
-    const browser = await puppeteer.launch(browser_option);
-    const page = await browser.newPage();
+async function init(page){
     await page.setDefaultTimeout(timeout);
     await page.setCookie(...cookies_);
     const setCookie = await page.cookies(url);
     console.log(setCookie);
     if (proxy){
-        if(await utils.test_proxy(browser)){} else{return}
+        if(await utils.test_proxy(page)){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
+    return true;
+}
+
+async function start(browser, page){
     try{
-        for (let i=0;i<deeps;i++){
-            await page.goto(url);
-            await utils.get_a_link(page);
+        for (let i=1;i<=deeps;i++){
+            Promise.resolve(page.goto(url))
+            //.then(page.waitForNavigation())
+            .then(utils.get_links(page, i));
         }
     }
     catch (UnhandledPromiseRejectionWarning){
     }
-    //console.log(a[1]);
+}
 
+async function end(browser){
     console.log(settings.results);
-    await page.waitFor(2000);
     await browser.close();
+}
+
+browser_option['args'] = browser_args;
+(async() => {
+    const browser = await puppeteer.launch(browser_option);
+    const page = await browser.newPage();
+    let state = await Promise.resolve(init(page));
+    if (!state){
+        return
+    }
+    else{
+        Promise.resolve(start(browser, page));
+    }
+
+    await page.waitFor(2000);
+    Promise.all([end(browser)]);
 })();

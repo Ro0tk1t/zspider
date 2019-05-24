@@ -17,14 +17,12 @@ function check_url(url){
     return true;
 }
 
-async function test_proxy(browser){
-    const page = await browser.newPage();
+async function test_proxy(page){
     try{
         await page.goto('http://example.com');
     }
     catch (UnhandledPromiseRejectionWarning){
         console.log('proxy does\'t work');
-        await browser.close();
         return false;
     }
     return true;
@@ -41,27 +39,36 @@ function check_root(url){
     return false;
 }
 
-async function push_result(href){
+async function push_result(href, deep){
     href = fix_only_path_url(href);
     if (check_root(href)){
-        settings.results['same'].add(href);
+        settings.results['same'][deep].add(href);
     }
     else{
-        settings.results['different'].add(href);
+        settings.results['different'][deep].add(href);
     }
 }
 
-async function get_a_link(page){
+async function get_a_link(page, deep){
     let elems = await page.$x('//a');
     elems.forEach(async function(elem){
         let href = await page.evaluate(x=>x.href, elem);
+        console.log(href);
         // FIXME: save text ?
         // let text = await page.evaluate(x=>x.textContent, elem);
-        push_result(href);
+        await push_result(href, deep);
     })
+}
+
+async function get_links(page, deep){
+    if (typeof(settings.results[deep]) == 'undefined'){
+        settings.results['same'][deep] = new Set();
+        settings.results['different'][deep] = new Set();
+    }
+    Promise.resolve(get_a_link(page, deep));
 }
 
 exports.fix_url=fix_url;
 exports.check_url=check_url;
 exports.test_proxy=test_proxy;
-exports.get_a_link=get_a_link;
+exports.get_links=get_links;

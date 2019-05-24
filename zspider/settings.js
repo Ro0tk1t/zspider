@@ -8,8 +8,12 @@ function privSet(){
 }
 
 var results = {
-    "same": new Set(),
-    "different": new Set()
+    "same": {
+        1: new Set()
+    },
+    "different": {
+        1: new Set()
+    }
 };
 var hostname = '';
 
