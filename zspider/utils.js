@@ -1,9 +1,9 @@
 function fix_url(url){
-    if (url.indexOf('http://') | url.indexOf('https://')){
+    if (url.startsWith('http://') | url.startsWith('https://')){
         return url;
     }
     else{
-        return 'http'+url;
+        return 'http://'+url;
     }
 }
 
