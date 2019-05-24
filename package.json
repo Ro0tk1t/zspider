@@ -1,0 +1,26 @@
+{
+	"name": "zspider",
+	"version": "0.0.1",
+	"author": "Ro0tk1t",
+	"description": "A JavaScript spider based on puppeteer",
+	"keywords":["node.js","javascript", "spider", "puppeteer"],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Ro0tk1t/zspider"
+	},
+	"license":"MIT",
+	"engines": {"node": "0.10.x"},
+	"bugs":{"url":"https://github.com/Ro0tk1t/zspider/issues","email":"r00tk1t@qq.com"},
+	"contributors":[{"name":"Ro0tk1t","email":"r00tk1t@qq.com"}],
+	"scripts": {
+		"start": "node main.js url='http://example.com'"
+        "test": "tap tests/*.js"
+	},
+	"dependencies": {
+		"puppeteer-core": "latest",
+		"mongoose": "~3.8.3",
+		"url": "latest"
+	},
+	"devDependencies": {
+	}
+}
