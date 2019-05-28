@@ -58,9 +58,9 @@ async function init(page){
 async function start(browser, page){
     try{
         for (let i=1;i<=deeps;i++){
-            Promise.resolve(page.goto(url))
-            //.then(page.waitForNavigation())
-            .then(utils.get_links(page, i));
+            await page.goto(url, {'timeout': 0});
+            //await page.waitForNavigation();
+            await utils.get_links(page, i);
         }
     }
     catch (UnhandledPromiseRejectionWarning){
