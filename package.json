@@ -13,7 +13,7 @@
 	"bugs":{"url":"https://github.com/Ro0tk1t/zspider/issues","email":"r00tk1t@qq.com"},
 	"contributors":[{"name":"Ro0tk1t","email":"r00tk1t@qq.com"}],
 	"scripts": {
-		"start": "node main.js url='http://example.com'"
+		"start": "node main.js url='http://example.com'",
         "test": "tap tests/*.js"
 	},
 	"dependencies": {
